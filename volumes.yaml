@@ -1,0 +1,25 @@
+kind: Pod 
+apiVersion: v1 
+metadata:
+  name: simple-volume-pod 
+spec:
+  # Volumes are declared at the pod level. They share its # lifecycle and are communal across containers inside it. 
+  volumes:
+  # Volumes have a name and configuration
+  # based on the type of volume.
+  # In this example, we use the emptyDir volume type
+    - name: simple-vol
+      emptyDir: {}
+  # Now, one of our containers can mount this volume
+  # and use it like any other directory. 
+  containers:
+    - name: my-container 
+      volumeMounts:
+    # name must match the volume name set at the pod level
+        - name: simple-vol
+      # Where to mount this directory in our container 
+          mountPath: /var/simple
+      # Now that we have a directory mounted at /var/simple, # write to a file inside it!
+      image: alpine
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do date >> /var/simple/file.txt; sleep 5; done"]
