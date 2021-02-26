@@ -1,0 +1,29 @@
+# Create two pods -- one for version 1.0.1 and # one for 1.0.2 of our Docker image. They serve # slightly different output so we can tell which # pod is handling which request.
+kind: Pod 
+apiVersion: v1 
+metadata:
+  name: hostname-pod-101 
+  labels:
+    # These labels are used by the service to select # pods that can handle its network requests app: echo-hostname
+    app-version: v101
+spec: 
+  containers:
+    - name: nginx-hostname
+      image: kubegoldenguide/nginx-hostname:1.0.1 
+      ports:
+        # nginx runs on port 80 inside its container
+        - containerPort: 80
+---
+kind: Pod 
+apiVersion: v1 
+metadata:
+  name: hostname-pod-102 
+  labels:
+    app: echo-hostname
+    app-version: v102 
+spec:
+  containers:
+    - name: nginx-hostname
+      image: kubegoldenguide/nginx-hostname:1.0.2 
+      ports:
+        - containerPort: 80

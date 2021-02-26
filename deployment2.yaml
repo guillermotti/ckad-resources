@@ -1,0 +1,25 @@
+kind: Deployment
+apiVersion: apps/v1 
+metadata:
+  name: nginx-deployment2
+spec:
+  replicas: 5 
+  strategy:
+    type: RollingUpdate 
+    rollingUpdate:
+      # Allow up to seven pods to be running
+      # during the update process
+      maxSurge: 2
+      # Require at least four pods to be running # during the update process maxUnavailable: 1
+  selector: 
+    matchLabels:
+      app: nginx 
+  template:
+    metadata: 
+      name: nginx 
+      labels:
+        app: nginx 
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.15.0

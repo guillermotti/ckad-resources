@@ -1,0 +1,37 @@
+# Notice that if you delete and recreate this # pod, your previous files will persist on the # minikube cluster!
+kind: Pod
+apiVersion: v1 
+metadata:
+  name: my-pv-user-pod 
+spec:
+  volumes:
+  # This volume is of type persistentVolumeClaim -- i.e.
+  # we need a persistent volume.
+    - name: a-persistent-volume
+      persistentVolumeClaim:
+        # Must match claim name from the PVC YAML 
+        claimName: my-pvc
+    - name: example-configmap-volume
+      # Populate the volume with config map data
+      configMap:
+      # `name` here must match the name # specified in the ConfigMap's YAML 
+        name: example-configmap
+    - name: api-secret-volume
+      # Populate the volume with config map data
+      secret:
+      # `secretName` here must match the name # specified in the secret's YAML 
+        secretName: api-authentication-secret
+  # Mount the volume into the container and use it
+  containers:
+    - name: pv-user
+      volumeMounts:
+        - name: a-persistent-volume
+          mountPath: /var/forever
+        - name: api-secret-volume
+          mountPath: /etc/secret
+      envFrom:
+        - configMapRef:
+            name: example-configmap
+      image: alpine
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do date >> /var/forever/file.txt; sleep 5; done"]

@@ -1,0 +1,17 @@
+# Declares a persistent volume is available for # pods to use as a long-term storage solution.
+# This persistent volume is backed by your local # minikube cluster.
+kind: PersistentVolume 
+apiVersion: v1 
+metadata:
+  name: my-persistent-volume-2
+spec:
+  capacity: 
+    storage: 256M
+  # The list of ways the persistent volume can be mounted
+  accessModes:
+    - ReadWriteOnce
+  # Configuration settings for the persistent volume.
+  # In this case, we're going to store the data on minikube. 
+  hostPath:
+    path: /data/my-persistent-volume/
+  storageClassName: standard
